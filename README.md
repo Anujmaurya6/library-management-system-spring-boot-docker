@@ -1,46 +1,85 @@
 # Library Management System
 
-A secure Library Management System REST API built with Spring Boot, PostgreSQL, JWT authentication, Swagger/OpenAPI, and Docker.
+A secure, containerized Library Management System REST API built with Spring Boot, PostgreSQL, JWT authentication, Swagger/OpenAPI, JUnit, Mockito, and Docker Compose.
+
+## About the Project
+
+This project provides REST APIs for managing a library system. It includes user registration and login, JWT-based security, book management, database persistence, API documentation, logging, validation, exception handling, unit testing, and Docker-based deployment.
 
 ## Features
 
 - User signup and login
-- JWT-based authentication and authorization
-- Book management APIs
+- JWT authentication and authorization
+- Secure protected APIs
+- Book management REST APIs
 - PostgreSQL database integration
-- JPA/Hibernate ORM
-- DTO validation and global exception handling
-- Swagger UI API documentation
-- Logging with SLF4J/Logback
-- Dockerized Spring Boot application and PostgreSQL database
+- JPA and Hibernate ORM
+- DTO-based request and response handling
+- Input validation
+- Global exception handling
+- Application logging with SLF4J and Logback
+- Swagger/OpenAPI API documentation
+- Unit testing with JUnit 5 and Mockito
+- Dockerized Spring Boot application
+- Dockerized PostgreSQL database
+- Docker Compose multi-container setup
 
 ## Tech Stack
 
 - Java 21
 - Spring Boot
-- Spring Security + JWT
-- Spring Data JPA / Hibernate
+- Spring Security
+- JWT
+- Spring Data JPA
+- Hibernate
 - PostgreSQL
 - Maven
 - Swagger / OpenAPI
-- Docker and Docker Compose
+- JUnit 5
+- Mockito
+- Docker
+- Docker Compose
+
+## Project Architecture
+
+```text
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+PostgreSQL Database
+```
+
+```text
+Browser / Swagger
+       ↓
+Spring Boot Container :8080
+       ↓
+Docker Network
+       ↓
+PostgreSQL Container :5432
+```
+
+## Prerequisites
+
+Install the following before running the project:
+
+- Java 21
+- Docker Desktop
+- Git (optional, for cloning the repository)
 
 ## Run with Docker
 
-### Prerequisites
-
-- Docker Desktop
-- Java 21 and Maven are only needed if building the JAR locally
-
-### 1. Build the application JAR
-
-On Windows:
+### 1. Clone the repository
 
 ```cmd
-mvnw.cmd package -DskipTests
+git clone <your-repository-url>
+cd library-management-system-spring-boot-docker
 ```
 
-### 2. Create a `.env` file
+### 2. Create the `.env` file
 
 Create a `.env` file in the project root:
 
@@ -53,42 +92,57 @@ JWT_SECRET=your_base64_jwt_secret
 
 Do not upload `.env` to GitHub.
 
-### 3. Start the application and database
+### 3. Build the JAR file
+
+On Windows:
+
+```cmd
+mvnw.cmd package -DskipTests
+```
+
+### 4. Start the application and database
 
 ```cmd
 docker compose up --build
 ```
 
-This starts:
+Docker Compose starts:
 
-- Spring Boot application on port `8080`
-- PostgreSQL database on port `5433`
+- Spring Boot application at port `8080`
+- PostgreSQL database at host port `5433`
 
-### 4. Open Swagger UI
+### 5. Open Swagger UI
 
 ```text
 http://localhost:8080/swagger-ui.html
 ```
 
-Alternative URL:
+If needed, use:
 
 ```text
 http://localhost:8080/swagger-ui/index.html
 ```
 
-## Docker Architecture
+## API Testing Flow
 
-```text
-Browser
-   |
-   | localhost:8080
-   v
-Spring Boot Container
-   |
-   | Docker network: postgres:5432
-   v
-PostgreSQL Container
+1. Open Swagger UI.
+2. Test `POST /api/auth/signup`.
+3. Test `POST /api/auth/login`.
+4. Copy the JWT token from the login response.
+5. Use the token to test protected Book APIs.
+
+## Run Tests
+
+Run all unit tests:
+
+```cmd
+mvnw.cmd test
 ```
+
+The project uses:
+
+- JUnit 5 for test execution
+- Mockito for mocking service dependencies
 
 ## Useful Docker Commands
 
@@ -101,36 +155,4 @@ docker compose up --build
 Stop containers:
 
 ```cmd
-docker compose down
-```
-
-Check running containers:
-
-```cmd
-docker compose ps
-```
-
-View logs:
-
-```cmd
-docker compose logs -f
-```
-
-## Security Notes
-
-- Never commit `.env` files.
-- Never commit database passwords or JWT secrets.
-- Use environment variables for sensitive configuration.
-- Keep `.env` included in `.gitignore`.
-
-## API Testing Flow
-
-1. Open Swagger UI.
-2. Call `POST /api/auth/signup`.
-3. Call `POST /api/auth/login`.
-4. Copy the JWT token from the login response.
-5. Use the token to test protected Book APIs.
-
-## Author
-
-Anuj
+docker compose
